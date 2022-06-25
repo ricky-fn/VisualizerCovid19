@@ -56,7 +56,7 @@
     "debounce": "^1.2.0",
     "delegate-events": "^1.1.1",
     "html-webpack-plugin": "^4.3.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "particles.js": "^2.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.42.1",
