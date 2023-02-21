@@ -1,8 +1,6 @@
 import type { MapPolygonSeries, MapPolygon, MapChart } from "@amcharts/amcharts4/maps";
 import type { iRGB } from "@amcharts/amcharts4/.internal/core/utils/Colors";
 import type { Color } from "@amcharts/amcharts4/core";
-// @ts-ignore
-import { debounce } from "debounce";
 import { am4core, am4maps } from "../libs/am4chart";
 import BaseComponent from "./BaseComponent";
 import { CountriesData, CountriesSortedByActive, CountryData } from "../models";
@@ -199,7 +197,7 @@ export default class MapComponent extends BaseComponent<MapPolygonSeries> {
   }
 
   private getTooltipTemplate(data: CountryData | undefined) {
-    if (!data || data.timeseries === undefined || data.reports === undefined) {
+    if (!data) {
       return `
           <div class="earth-overlay">
               <img src="{flag}">
@@ -216,19 +214,8 @@ export default class MapComponent extends BaseComponent<MapPolygonSeries> {
     }
 
     const {
-      name, cases, reports, recovered, flag,
+      name, cases, reports, recovered, flag, deaths
     } = data;
-    const { dates, confirmed, deaths } = data.timeseries;
-    const lastDate = new Date(dates.slice(-1)[0]);
-    const passedTime = tools.convertDateToString(tools.dateDiffer(lastDate));
-
-    const rcDifference = confirmed.slice(-2).reduce((pre, cur) => cur - pre);
-    const rcMathPrefix = rcDifference < 0 ? "" : "+";
-    const rcDifferenceTemplate = rcDifference ? `<span class="changed">${rcMathPrefix}${rcDifference} <span class="time">(since ${passedTime})</span></span><br>` : "";
-
-    const dcDifference = deaths.slice(-2).reduce((pre, cur) => cur - pre);
-    const dcMathPrefix = dcDifference < 0 ? "" : "+";
-    const dcDifferenceTemplate = dcDifference ? `<span class="changed">${dcMathPrefix}${dcDifference} <span class="time">(since ${passedTime})</span></span><br>` : "";
 
     return `
       <div class="earth-overlay">
@@ -237,16 +224,14 @@ export default class MapComponent extends BaseComponent<MapPolygonSeries> {
           <span>
             <em>${name}</em>
             <span><br>
-              <span class="tiny">${cases} total cases</span>
+              <span class="tiny">${tools.formatNumber(cases)} total cases</span>
             </span>
           </span>
         </div>
         <div class="info">
-          <span><span class="_active">${reports}</span> active</span><br>
-          ${rcDifferenceTemplate}
-          <span><span class="_dead">${data.deaths}</span> deceased</span><br>
-          ${dcDifferenceTemplate}
-          <span><span class="_recovered">${recovered}</span> recovered</span><br>
+          <span><span class="_active">${tools.formatNumber(reports)}</span> active</span><br>
+          <span><span class="_dead">${tools.formatNumber(deaths)}</span> deceased</span><br>
+          <span><span class="_recovered">${tools.formatNumber(recovered)}</span><br>recovered</span><br>
         </div>
       </div>
     `;
