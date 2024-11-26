@@ -44,7 +44,7 @@
     "file-loader": "6.0.0",
     "html-loader": "1.1.0",
     "mocha": "7.2.0",
-    "serverless": "1.79.0",
+    "serverless": "^3.38.0",
     "serverless-finch": "2.6.0",
     "serverless-offline": "6.5.0",
     "ts-loader": "7.0.1",
